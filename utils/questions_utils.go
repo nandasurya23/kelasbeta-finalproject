@@ -18,3 +18,33 @@ func InsertQuestionData(data models.Question) (models.Question, error) {
 
 	return data, err
 }
+
+func GetQuestionByID(id uint) (models.Question, error) {
+	question := models.Question{
+		Model: models.Model{
+			ID: id,
+		},
+	}
+	return question.GetByID(config.Postgres.DB)
+}
+
+func UpdateQuestionByID(id uint, questionData models.Question) error {
+	question := models.Question{
+		Model: models.Model{
+			ID: id,
+		},
+		Question:     questionData.Question,
+		CategoriesID: questionData.CategoriesID,
+	}
+
+	return question.UpdateByID(config.Postgres.DB)
+}
+
+func DeleteQuestionByID(id uint) error {
+	question := models.Question{
+		Model: models.Model{
+			ID: id,
+		},
+	}
+	return question.DeleteByID(config.Postgres.DB)
+}
