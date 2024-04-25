@@ -1,9 +1,39 @@
 package models
 
+import "gorm.io/gorm"
+
 type Answer struct {
-	ID         uint   `db:"id"`
-	Option     string `db:"option"`
-	Response   string `db:"response"`
-	Score      int    `db:"score"`
-	QuestionID uint   `db:"question_id"`
+	Model
+	Opsi       string `gorm:"not null" json:"opsi"`
+	Jawaban    string `gorm:"not null" json:"jawaban"`
+	Score      int    `gorm:"not null" json:"score"`
+	QuestionID uint   `gorm:"not null" json:"question_id"`
+}
+
+func (cr *Answer) Create(db *gorm.DB) error {
+	err := db.
+		Model(Answer{}).
+		Create(&cr).
+		Error
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (cr *Answer) GetAll(db *gorm.DB) ([]Answer,error) {
+	res := []Answer{}
+
+	err := db.
+		Model(Answer{}).
+		Find(&res).
+		Error
+
+	if err != nil {
+		return []Answer{}, err
+	}
+
+	return res, nil
 }
