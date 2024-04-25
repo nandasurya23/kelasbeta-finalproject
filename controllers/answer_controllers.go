@@ -10,9 +10,9 @@ import (
 )
 
 func RouteAnswers(app *fiber.App) {
-	questionGroup := app.Group("/answer")
-	questionGroup.Get("/", GetAnswerList)
-	questionGroup.Post("/", InsertAnswer)
+	answerGroup := app.Group("/answer")
+	answerGroup.Get("/", GetAnswerList)
+	answerGroup.Post("/", InsertAnswer)
 }
 
 func GetAnswerList(c *fiber.Ctx) error {
