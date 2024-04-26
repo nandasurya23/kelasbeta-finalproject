@@ -41,7 +41,7 @@ func OpenDB()  {
 func autoMigrate(db *gorm.DB) error {
 	err := db.AutoMigrate(
 		&model.Category{},
-        // &model.Module{},
+        &model.Module{},
 	)
 
 	if err != nil {

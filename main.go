@@ -23,6 +23,7 @@ func main()  {
 	app := fiber.New()
 	
 	controllers.RouteCategories(app)
+	controllers.RouteModules(app)
 	err := app.Listen(":3000")
 	if err != nil {
 		logrus.Fatal(

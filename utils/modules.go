@@ -29,21 +29,21 @@ func GetModulesByID(id uint) (model.Module, error) {
 	return module.GetByID(config.Postgres.DB)
 }
 
-func UpdateModulesByID(id uint, moduleData model.Module) error {
+func UpdateModulesByID(id uint, modulesData model.Module) error {
 	answer := model.Module{
 		Model: model.Model{
 			ID: id,
 		},
-		Identifier:       moduleData.Identifier,
-		Name:    moduleData.Name,
-		QuestionIDS:    moduleData.QuestionIDS,
+		Identifier:       modulesData.Identifier,
+		Name:    modulesData.Name,
+		QuestionIDS:    modulesData.QuestionIDS,
 	}
 
 	return answer.UpdateOneByID(config.Postgres.DB)
 }
 
 
-func DeleteModulessByID(id uint) error {
+func DeleteModulesByID(id uint) error {
 	categori := model.Module{
 		Model: model.Model{
 			ID: id,

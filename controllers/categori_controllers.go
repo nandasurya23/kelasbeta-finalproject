@@ -73,7 +73,7 @@ func InsertCategoryData(c *fiber.Ctx) error {
 func GetCategoriesList(c *fiber.Ctx) error {
 	catagoriesData, err := utils.GetCategoriesList()
 	if err != nil {
-		logrus.Error("Error on get cars list: ",
+		logrus.Error("Error on get categories list: ",
 		err.Error())
 		return c.Status(fiber.StatusInternalServerError).JSON(
 			map[string]any{
@@ -139,14 +139,14 @@ func UpdatecategoriesByID(c *fiber.Ctx) error {
 		})
 	}
 if err := utils.UpdateCategoriesByID(uint(id), categoriesData); err != nil {
-		logrus.Errorf("Error updating question: %s", err.Error())
+		logrus.Errorf("Error updating categories: %s", err.Error())
 		return c.Status(fiber.StatusInternalServerError).JSON(map[string]interface{}{
-			"message": "Failed to update question",
+			"message": "Failed to update categories",
 		})
 	}
 
 	return c.Status(fiber.StatusOK).JSON(map[string]interface{}{
-		"message": "Answers updated successfully",
+		"message": "categories updated successfully",
 	})
 }
 
@@ -161,12 +161,12 @@ func DeleteCategoriesByID(c *fiber.Ctx) error {
 	err = utils.DeleteCategoriesByID(uint(id))
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"message": "Failed to delete question",
+			"message": "Failed to delete categories",
 			"error":   err.Error(),
 		})
 	}
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
-		"message": "Answers deleted successfully",
+		"message": "categories deleted successfully",
 	})
 }
