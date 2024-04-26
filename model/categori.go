@@ -6,29 +6,29 @@ import (
 
 type Category struct {
 	Model
-	name  string `gorm:"not null"`
-	order uint   `gorm:"not null"`
+	Name  string `gorm:"not null" json:"name"`
+	Order int   `gorm:"not null" json:"order"`
 }
 
-func (cs *Category) Create(db *gorm.DB) error {
+func (cr *Category) Create(db *gorm.DB) error {
 	err := db.
 		Model(Category{}).
-		Create(&cs).
+		Create(&cr).
 		Error
 
-		if err != nil {
-			return err
-		}
+	if err != nil {
+		return err
+	}
 
-		return nil
+	return nil
 }
 
-func (cs *Category) GetByID(db *gorm.DB) (Category, error) {
+func (cr *Category) GetByID(db *gorm.DB) (Category, error) {
 	res := Category{}
 
 	err := db.
 		Model(Category{}).
-		Where("id = ?", cs.Model.ID).
+		Where("id = ?", cr.Model.ID).
 		Take(&res).
 		Error
 
@@ -39,7 +39,7 @@ func (cs *Category) GetByID(db *gorm.DB) (Category, error) {
 	return res, nil
 }
 
-func (cs *Category) GetAll(db *gorm.DB) ([]Category, error) {
+func (cr *Category) GetAll(db *gorm.DB) ([]Category, error) {
 	res := []Category{}
 
 	err := db.
@@ -54,14 +54,14 @@ func (cs *Category) GetAll(db *gorm.DB) ([]Category, error) {
 	return res, nil
 }
 
-func (cs *Category) UpdateOneByID(db *gorm.DB) error {
+func (cr *Category) UpdateOneByID(db *gorm.DB) error {
 	err := db.
 		Model(Category{}).
-		Select("name", "order",).
-		Where("id = ?", cs.Model.ID).
+		Select("Name", "Order").
+		Where("id = ?", cr.Model.ID).
 		Updates(map[string]any{
-			"name":          cs.name,
-			"order":          cs.order,
+			"Name":  cr.Name,
+			"Order": cr.Order,
 		}).
 		Error
 
@@ -72,11 +72,11 @@ func (cs *Category) UpdateOneByID(db *gorm.DB) error {
 	return nil
 }
 
-func (cs *Category) DeleteByID(db *gorm.DB) error {
+func (cr *Category) DeleteByID(db *gorm.DB) error {
 	err := db.
 		Model(Category{}).
-		Where("id = ?", cs.Model.ID).
-		Delete(&cs).
+		Where("id = ?", cr.Model.ID).
+		Delete(&cr).
 		Error
 
 	if err != nil {

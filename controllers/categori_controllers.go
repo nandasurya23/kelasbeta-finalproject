@@ -15,52 +15,57 @@ func RouteCategories(app *fiber.App)  {
 	categoriesgroup.Post("/", InsertCategoryData)
 	categoriesgroup.Get("/", GetCategoriesList)
 	categoriesgroup.Get("/:id", GetCategoriesByID)
-	// categoriesgroup.Put("/:id", UpdateCategoriesByID)
-	// categoriesgroup.Delete("/:id", DeleteCategoriesById)
+	categoriesgroup.Put("/:id", UpdatecategoriesByID)
+	categoriesgroup.Delete("/:id", DeleteCategoriesByID)
 }
 
-func CheckRole(c *fiber.Ctx) error {
-	client := string(c.Request().Header.Peek("Role"))
-	if client == "Admin" {
-		return c.Next()
-	}
-	return c.Status(fiber.StatusUnauthorized).JSON(map[string]any{
-		"message": "User Unauthorized",
-	})
-}
+// func CheckRole(c *fiber.Ctx) error {
+// 	client := string(c.Request().Header.Peek("Role"))
+// 	if client == "Admin" {
+// 		return c.Next()
+// 	}
+// 	return c.Status(fiber.StatusUnauthorized).JSON(map[string]any{
+// 		"message": "User Unauthorized",
+// 	})
+// }
 
 func InsertCategoryData(c *fiber.Ctx) error {
 	type AddCategoryRequest struct {
-		name string
-		order uint 
+		Name string `json:"name" valid:"required,type(string)"` 
+		Order int `json:"order" valid:"required"`
 	}
 	req := new(AddCategoryRequest)
 	
 	if err := c.BodyParser(req); err != nil{
 		return c.Status(fiber.StatusBadRequest).
-		JSON(map[string]any{
+		JSON(map[string]interface{}{
 			"message": "Body not valid",
 		})
 	}
-	isValid, err := govalidator.ValidateStruct(req)
-	if !isValid && err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(map[string]any{
+	if _, err := govalidator.ValidateStruct(req); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(map[string]interface{}{
 			"message": err.Error(),
 		})
 	}
 
-	category, errCreatecategory := utils.InsertCategoryData(model.Category{})
+	categori := model.Category{
+		Name:  req.Name,
+		Order: req.Order,
+	}
 
-	if errCreatecategory != nil {
-		logrus.Printf("Terjadi error : %s\n",errCreatecategory.Error())
+	InsertedCategoryData, errCreateCategori:= utils.InsertCategoryData(categori)
+
+	if errCreateCategori != nil {
+		logrus.Printf("Error creating categori: %s\n", errCreateCategori.Error())
 		return c.Status(fiber.StatusInternalServerError).
-			JSON(map[string]any{
+			JSON(map[string]interface{}{
 				"message": "Server Error",
 			})
 	}
-	return c.Status(fiber.StatusOK).JSON(map[string]any{
+
+	return c.Status(fiber.StatusCreated).JSON(map[string]interface{}{
 		"message": "Success Insert Data",
-		"category": category,
+		"category": InsertedCategoryData,
 	})
 }
 
@@ -116,4 +121,52 @@ func GetCategoriesByID(c *fiber.Ctx) error {
 			"message": "Success",
 		},
 	)
+}
+
+
+func UpdatecategoriesByID(c *fiber.Ctx) error {
+	id, err := strconv.Atoi(c.Params("id"))
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(map[string]interface{}{
+			"message": "ID not valid",
+		})
+	}
+
+	var categoriesData model.Category
+	if err := c.BodyParser(&categoriesData); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(map[string]interface{}{
+			"message": "Invalid request body",
+		})
+	}
+if err := utils.UpdateCategoriesByID(uint(id), categoriesData); err != nil {
+		logrus.Errorf("Error updating question: %s", err.Error())
+		return c.Status(fiber.StatusInternalServerError).JSON(map[string]interface{}{
+			"message": "Failed to update question",
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(map[string]interface{}{
+		"message": "Answers updated successfully",
+	})
+}
+
+func DeleteCategoriesByID(c *fiber.Ctx) error {
+	id, err := strconv.Atoi(c.Params("id"))
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "ID not valid",
+		})
+	}
+
+	err = utils.DeleteCategoriesByID(uint(id))
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": "Failed to delete question",
+			"error":   err.Error(),
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"message": "Answers deleted successfully",
+	})
 }

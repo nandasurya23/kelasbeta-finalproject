@@ -2,43 +2,46 @@ package config
 
 import (
 	"FINALPROJECT/model"
-	"database/sql"
 	"fmt"
-
+	"log"
+	"os"
+    "gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
-const (
-    host     = "localhost"
-    port     = 5432
-    user     = "postgres"
-    password = "Satwikayoga"
-    dbname   = "Random_question"
+type PostgresDB struct{
+    DB *gorm.DB
+}
 
-)
+var Postgres PostgresDB
 
 func OpenDB()  {
-    psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
-        "password=%s dbname=%s sslmode=disable",
-        host, port, user, password, dbname)
+    connString := fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=disable",
+    os.Getenv("DB_HOST"),
+    os.Getenv("DB_PORT"),
+    os.Getenv("DB_USER"),
+    os.Getenv("DB_DATABASE"),
+    os.Getenv("DB_PASS"))
 
-    db, err := sql.Open("postgres", psqlInfo)
+    postgresConn, err := gorm.Open(postgres.Open(connString), &gorm.Config{})
     if err != nil {
-        panic(err)
+        log.Fatal(err)
     }
-    defer db.Close()
 
-    err = db.Ping()
+    Postgres = PostgresDB{
+        DB: postgresConn,
+    }
+
+    err = autoMigrate(postgresConn)
     if err != nil {
-        panic(err)
+        log.Fatal(err)
     }
-    fmt.Println("You connected to your database.")
-
 }
 
 func autoMigrate(db *gorm.DB) error {
 	err := db.AutoMigrate(
 		&model.Category{},
+        // &model.Module{},
 	)
 
 	if err != nil {
