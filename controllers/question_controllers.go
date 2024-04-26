@@ -39,8 +39,8 @@ func GetQuestionList(c *fiber.Ctx) error {
 
 func InsertQuestionData(c *fiber.Ctx) error {
 	type AddQuestionRequest struct {
-		Question     string `json:"question" valid:"required,type(string)"`
-		CategoriesID uint   `json:"categories_id" valid:"required"`
+		Question   string `json:"question" valid:"required,type(string)"`
+		CategoryID uint   `json:"category_id" valid:"required"`
 	}
 
 	req := new(AddQuestionRequest)
@@ -59,8 +59,8 @@ func InsertQuestionData(c *fiber.Ctx) error {
 	}
 
 	question := models.Question{
-		Question:     req.Question,
-		CategoriesID: req.CategoriesID,
+		Question:   req.Question,
+		CategoryID: req.CategoryID,
 	}
 
 	insertedQuestion, errCreateQuestion := utils.InsertQuestionData(question)

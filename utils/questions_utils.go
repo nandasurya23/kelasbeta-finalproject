@@ -33,8 +33,8 @@ func UpdateQuestionByID(id uint, questionData models.Question) error {
 		Model: models.Model{
 			ID: id,
 		},
-		Question:     questionData.Question,
-		CategoriesID: questionData.CategoriesID,
+		Question:   questionData.Question,
+		CategoryID: questionData.CategoryID,
 	}
 
 	return question.UpdateByID(config.Postgres.DB)

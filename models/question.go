@@ -4,10 +4,10 @@ import "gorm.io/gorm"
 
 type Question struct {
 	Model
-	Question     string `gorm:"not null" json:"question"`
-	CategoriesID uint   `gorm:"not null" json:"categories_id"`
-	// Category     Category `json:"category,omitempty"`
-	Answers []Answer `json:"answers"`
+	Question   string   `gorm:"not null" json:"question"`
+	CategoryID uint     `gorm:"not null" json:"category_id"`
+	Category   Category `json:"category,omitempty"`
+	Answers    []Answer `json:"answers,omitempty"`
 }
 
 func (cr *Question) Create(db *gorm.DB) error {
@@ -28,7 +28,7 @@ func (cr *Question) GetByID(db *gorm.DB) (Question, error) {
 
 	err := db.
 		Model(Question{}).
-		// Preload("Category").
+		Preload("Category").
 		Preload("Answers").
 		Where("id = ?", cr.Model.ID).
 		Take(&res).
@@ -59,11 +59,11 @@ func (cr *Question) GetAll(db *gorm.DB) ([]Question, error) {
 func (cr *Question) UpdateByID(db *gorm.DB) error {
 	err := db.
 		Model(Question{}).
-		Select("question", "categories_id").
+		Select("question", "category_id").
 		Where("id = ?", cr.Model.ID).
 		Updates(map[string]any{
 			"question":      cr.Question,
-			"categories_id": cr.CategoriesID,
+			"category_id": cr.CategoryID,
 		}).
 		Error
 
