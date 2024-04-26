@@ -57,12 +57,12 @@ func (cr *Module) GetAll(db *gorm.DB) ([]Module,error)  {
 func (cr *Module) UpdateOneByID(db *gorm.DB) error {
 	err := db.
 	Model(Module{}).
-	Select("identifier", "name", "question_ids",).
+	Select("Identifier", "Name", "QuestionIDS",).
 	Where("id = ?", cr.Model.ID).
 	Updates(map[string]any{
-		"identifier": cr.Identifier,
-		"name": cr.Name,
-		"question_ids": cr.QuestionIDS,
+		"Identifier": cr.Identifier,
+		"Name": cr.Name,
+		"QuestionIDS": cr.QuestionIDS,
 	}).
 	Error
 	if err != nil {
