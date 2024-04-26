@@ -20,7 +20,6 @@ func RouteModules(app *fiber.App) {
 	modulesgroup.Delete("/:id", DeleteModulessByID)
 }
 
-
 func InsertModulesData(c *fiber.Ctx) error {
 	type AddModuleRequest struct{
 		Identifier   string `json:"identifier" valid:"required, type(string)"`
