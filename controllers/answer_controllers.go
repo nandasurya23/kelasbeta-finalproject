@@ -22,7 +22,7 @@ func RouteAnswers(app *fiber.App) {
 func GetAnswerList(c *fiber.Ctx) error {
 	answerData, err := utils.GetAnswerList()
 	if err != nil {
-		logrus.Error("Error on get cars list: ", err.Error())
+		logrus.Error("Error on get answer list: ", err.Error())
 		return c.Status(fiber.StatusInternalServerError).JSON(
 			map[string]any{
 				"message": "Server Error",
@@ -70,7 +70,7 @@ func InsertAnswer(c *fiber.Ctx) error {
 	insertedAnswer, errCreateAnswer := utils.InsertAnswer(answer)
 
 	if errCreateAnswer != nil {
-		logrus.Printf("Error creating question: %s\n", errCreateAnswer.Error())
+		logrus.Printf("Error creating answer: %s\n", errCreateAnswer.Error())
 		return c.Status(fiber.StatusInternalServerError).
 			JSON(map[string]interface{}{
 				"message": "Server Error",
@@ -126,9 +126,9 @@ func UpdateAnswerByID(c *fiber.Ctx) error {
 	}
 
 	if err := utils.UpdateAnswerByID(uint(id), answerData); err != nil {
-		logrus.Errorf("Error updating question: %s", err.Error())
+		logrus.Errorf("Error updating answer: %s", err.Error())
 		return c.Status(fiber.StatusInternalServerError).JSON(map[string]interface{}{
-			"message": "Failed to update question",
+			"message": "Failed to update answer",
 		})
 	}
 
@@ -148,7 +148,7 @@ func DeleteAnswerByID(c *fiber.Ctx) error {
 	err = utils.DeleteAnswerByID(uint(id))
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"message": "Failed to delete question",
+			"message": "Failed to delete answer",
 			"error":   err.Error(),
 		})
 	}

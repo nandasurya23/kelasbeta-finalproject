@@ -7,8 +7,7 @@ type Answer struct {
 	Opsi       string `gorm:"not null" json:"opsi"`
 	Jawaban    string `gorm:"not null" json:"jawaban"`
 	Score      int    `gorm:"not null" json:"score"`
-	QuestionID uint   `gorm:"not null" json:"question_id"`
-	// Question   Question `gorm:"foreignKey:QuestionID"`
+	QuestionID uint   `json:"question_id" gorm:"not null;foreignKey:QuestionID"`
 }
 
 func (cr *Answer) Create(db *gorm.DB) error {

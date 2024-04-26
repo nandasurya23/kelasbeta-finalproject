@@ -6,7 +6,8 @@ type Question struct {
 	Model
 	Question     string `gorm:"not null" json:"question"`
 	CategoriesID uint   `gorm:"not null" json:"categories_id"`
-	// Answers      []Answer
+	// Category     Category `json:"category,omitempty"`
+	Answers []Answer `json:"answers"`
 }
 
 func (cr *Question) Create(db *gorm.DB) error {
@@ -27,6 +28,7 @@ func (cr *Question) GetByID(db *gorm.DB) (Question, error) {
 
 	err := db.
 		Model(Question{}).
+		// Preload("Category").
 		Preload("Answers").
 		Where("id = ?", cr.Model.ID).
 		Take(&res).

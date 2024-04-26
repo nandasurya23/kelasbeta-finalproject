@@ -43,6 +43,8 @@ func autoMigrate(db *gorm.DB) error {
 	err := db.AutoMigrate(
 		&models.Question{},
 		&models.Answer{},
+		&models.Category{},
+		&models.Module{},
 	)
 
 	if err != nil {
