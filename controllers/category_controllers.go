@@ -12,22 +12,12 @@ import (
 
 func RouteCategories(app *fiber.App)  {
 	categoriesgroup := app.Group("/categories",)
-	categoriesgroup.Post("/", InsertCategoryData)
-	categoriesgroup.Get("/", GetCategoriesList)
-	categoriesgroup.Get("/:id", GetCategoriesByID)
-	categoriesgroup.Put("/:id", UpdatecategoriesByID)
-	categoriesgroup.Delete("/:id", DeleteCategoriesByID)
+	categoriesgroup.Post("/", utils.CheckRole, InsertCategoryData)
+	categoriesgroup.Get("/",utils.CheckRole, GetCategoriesList)
+	categoriesgroup.Get("/:id",utils.CheckRole, GetCategoriesByID)
+	categoriesgroup.Put("/:id",utils.CheckRole, UpdatecategoriesByID)
+	categoriesgroup.Delete("/:id",utils.CheckRole, DeleteCategoriesByID)
 }
-
-// func CheckRole(c *fiber.Ctx) error {
-// 	client := string(c.Request().Header.Peek("Role"))
-// 	if client == "Admin" {
-// 		return c.Next()
-// 	}
-// 	return c.Status(fiber.StatusUnauthorized).JSON(map[string]any{
-// 		"message": "User Unauthorized",
-// 	})
-// }
 
 func InsertCategoryData(c *fiber.Ctx) error {
 	type AddCategoryRequest struct {

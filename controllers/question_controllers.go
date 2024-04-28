@@ -14,9 +14,9 @@ func RouteQuestions(app *fiber.App) {
 	questionGroup := app.Group("/question")
 	questionGroup.Get("/", GetQuestionList)
 	questionGroup.Get("/:id", GetQuestionByID)
-	questionGroup.Post("/", InsertQuestionData)
-	questionGroup.Put("/:id", UpdateQuestionByID)
-	questionGroup.Delete("/:id", DeleteQuestionByID)
+	questionGroup.Post("/",utils.CheckRole, InsertQuestionData)
+	questionGroup.Put("/:id",utils.CheckRole,  UpdateQuestionByID)
+	questionGroup.Delete("/:id",utils.CheckRole,  DeleteQuestionByID)
 }
 
 func GetQuestionList(c *fiber.Ctx) error {

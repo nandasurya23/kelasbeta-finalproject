@@ -14,10 +14,11 @@ func RouteAnswers(app *fiber.App) {
 	answerGroup := app.Group("/answer")
 	answerGroup.Get("/", GetAnswerList)
 	answerGroup.Get("/:id", GetAnswerByID)
-	answerGroup.Post("/", InsertAnswer)
-	answerGroup.Put("/:id", UpdateAnswerByID)
-	answerGroup.Delete("/:id", DeleteAnswerByID)
+	answerGroup.Post("/",utils.CheckRole, InsertAnswer)
+	answerGroup.Put("/:id",utils.CheckRole, UpdateAnswerByID)
+	answerGroup.Delete("/:id",utils.CheckRole, DeleteAnswerByID)
 }
+
 
 func GetAnswerList(c *fiber.Ctx) error {
 	answerData, err := utils.GetAnswerList()

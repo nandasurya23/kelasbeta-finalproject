@@ -13,11 +13,11 @@ import (
 
 func RouteModules(app *fiber.App) {
 	modulesgroup := app.Group("/modules",)
-	modulesgroup.Post("/", InsertModulesData)
-	modulesgroup.Get("/", GetModulesList)
-	modulesgroup.Get("/:id", GetModulesByID)
-	modulesgroup.Put("/:id", UpdateModulesByID)
-	modulesgroup.Delete("/:id", DeleteModulessByID)
+	modulesgroup.Post("/",utils.CheckRole, InsertModulesData)
+	modulesgroup.Get("/",utils.CheckRole,  GetModulesList)
+	modulesgroup.Get("/:id",utils.CheckRole,  GetModulesByID)
+	modulesgroup.Put("/:id",utils.CheckRole,  UpdateModulesByID)
+	modulesgroup.Delete("/:id",utils.CheckRole,  DeleteModulessByID)
 }
 
 func InsertModulesData(c *fiber.Ctx) error {
