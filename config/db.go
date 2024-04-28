@@ -37,6 +37,7 @@ func OpenDB() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
 }
 
 func autoMigrate(db *gorm.DB) error {
