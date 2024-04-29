@@ -26,6 +26,7 @@ func main() {
 	controllers.RouteAnswers(app)
 	controllers.RouteCategories(app)
 	controllers.RouteModules(app)
+	controllers.ExamRoutes(app)
 
 	err := app.Listen(":3000")
 	if err != nil {

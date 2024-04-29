@@ -2,16 +2,13 @@ package utils
 
 import (
 	"kelasbeta/finalproject/config"
+	"kelasbeta/finalproject/mockstruct"
 	"kelasbeta/finalproject/models"
-	"time"
 )
 
 func InsertModuleData(data models.Module) (models.Module, error) {
-	data.CreatedAt = time.Now()
-	data.UpdatedAt = time.Now()
-	err := data.Create(config.Postgres.DB)
+	err := data.Insert(config.Postgres.DB)
 	return data, err
-
 }
 
 func GetModulesList() ([]models.Module, error) {
@@ -19,33 +16,49 @@ func GetModulesList() ([]models.Module, error) {
 	return modules.GetAll(config.Postgres.DB)
 }
 
-func GetModulesByID(id uint) (models.Module, error) {
+func GetModuleByID(id uint) (res mockstruct.Module, err error) {
 	module := models.Module{
 		Model: models.Model{
 			ID: id,
 		},
 	}
-	return module.GetByID(config.Postgres.DB)
+
+	err = module.GetByID(config.Postgres.DB)
+
+	if err != nil {
+		return
+	}
+
+	res.CreatedAt = module.CreatedAt
+	res.UpdatedAt = module.UpdatedAt
+	res.ID = module.ID
+	res.Identifier = module.Identifier
+	res.Name = module.Name
+	res.Questions = []models.Question{}
+
+	for _, k := range module.QuestionIDS {
+		qst := models.Question{
+			Model: models.Model{
+				ID: uint(k),
+			},
+		}
+		err = module.GetByID(config.Postgres.DB)
+		if err == nil {
+			res.Questions = append(res.Questions, qst)
+		}
+	}
+	return res, err
 }
 
-func UpdateModulesByID(id uint, modulesData models.Module) error {
-	answer := models.Module{
+func UpdateModuleByID(id uint, moduleData models.Module) error {
+	return moduleData.UpdateOneByID(config.Postgres.DB)
+}
+
+func DeleteModuleByID(id uint) error {
+	module := models.Module{
 		Model: models.Model{
 			ID: id,
 		},
-		Identifier:  modulesData.Identifier,
-		Name:        modulesData.Name,
-		QuestionIDS: modulesData.QuestionIDS,
 	}
-
-	return answer.UpdateOneByID(config.Postgres.DB)
-}
-
-func DeleteModulesByID(id uint) error {
-	categori := models.Module{
-		Model: models.Model{
-			ID: id,
-		},
-	}
-	return categori.DeleteByID(config.Postgres.DB)
+	return module.DeleteByID(config.Postgres.DB)
 }

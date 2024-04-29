@@ -11,6 +11,7 @@ type Question struct {
 }
 
 func (cr *Question) Create(db *gorm.DB) error {
+	cr.Category = Category{}
 	err := db.
 		Model(Question{}).
 		Create(&cr).
@@ -19,6 +20,8 @@ func (cr *Question) Create(db *gorm.DB) error {
 	if err != nil {
 		return err
 	}
+
+	cr.Category = Category{}
 
 	return nil
 }
@@ -62,7 +65,7 @@ func (cr *Question) UpdateByID(db *gorm.DB) error {
 		Select("question", "category_id").
 		Where("id = ?", cr.Model.ID).
 		Updates(map[string]any{
-			"question":      cr.Question,
+			"question":    cr.Question,
 			"category_id": cr.CategoryID,
 		}).
 		Error

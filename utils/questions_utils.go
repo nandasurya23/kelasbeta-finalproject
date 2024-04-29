@@ -6,6 +6,15 @@ import (
 	"time"
 )
 
+func GetQuestionsByIDList(ids []uint) ([]models.Question, error) {
+	var questions []models.Question
+	err := config.Postgres.DB.Where("id IN ?", ids).Find(&questions).Error
+	if err != nil {
+		return nil, err
+	}
+	return questions, nil
+}
+
 func GetQuestionList() ([]models.Question, error) {
 	var question models.Question
 	return question.GetAll(config.Postgres.DB)
