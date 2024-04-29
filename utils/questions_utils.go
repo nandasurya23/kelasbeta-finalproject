@@ -34,7 +34,7 @@ func GetQuestionByID(id uint) (models.Question, error) {
 			ID: id,
 		},
 	}
-	return question.GetByID(config.Postgres.DB)
+	return question, question.GetByID(config.Postgres.DB)
 }
 
 func UpdateQuestionByID(id uint, questionData models.Question) error {

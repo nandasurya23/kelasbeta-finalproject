@@ -26,22 +26,8 @@ func (cr *Question) Create(db *gorm.DB) error {
 	return nil
 }
 
-func (cr *Question) GetByID(db *gorm.DB) (Question, error) {
-	res := Question{}
-
-	err := db.
-		Model(Question{}).
-		Preload("Category").
-		Preload("Answers").
-		Where("id = ?", cr.Model.ID).
-		Take(&res).
-		Error
-
-	if err != nil {
-		return Question{}, err
-	}
-
-	return res, nil
+func (cr *Question) GetByID(db *gorm.DB) error {
+	return db.Preload("Category").Preload("Answers").Where("id = ?", cr.ID).Take(&cr).Error
 }
 
 func (cr *Question) GetAll(db *gorm.DB) ([]Question, error) {

@@ -42,7 +42,7 @@ func GetModuleByID(id uint) (res mockstruct.Module, err error) {
 				ID: uint(k),
 			},
 		}
-		err = module.GetByID(config.Postgres.DB)
+		err = qst.GetByID(config.Postgres.DB)
 		if err == nil {
 			res.Questions = append(res.Questions, qst)
 		}
